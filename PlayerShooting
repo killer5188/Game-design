@@ -1,18 +1,25 @@
-using Unity.VisualScripting;
 using UnityEngine;
-// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
-// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
-// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
+
+// THIS IS THE SHOOT SHOOT SCRIPT
+
 public class PlayerShooting : MonoBehaviour
-{
+{ 
     public GameObject bulletPrefab;
     public Transform firePoint;
     public float bulletForce = 20f;
+    public Camera cam;
+    public float maxDistance = 10f; // Max distance the bullet can travel
 
-    private void Update()
+    void Update()
     {
-        if(Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1))
         {
+            Vector3 rawMousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = new Vector3(rawMousePos.x - transform.position.x, rawMousePos.y - transform.position.y, 0f);
+
+            transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(mousePos.y, mousePos.x) * (180 / Mathf.PI) - 90);
+
+
             Shoot();
         }
     }
@@ -22,5 +29,8 @@ public class PlayerShooting : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
         bulletRb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+
+        // Destroy the bullet after a certain distance or time
+        Destroy(bullet, maxDistance / bulletForce); // Destroy after reaching maxDistance
     }
 }
