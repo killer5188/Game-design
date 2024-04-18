@@ -1,0 +1,26 @@
+using Unity.VisualScripting;
+using UnityEngine;
+// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
+// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
+// THIS IS STATIC SHOOTING UPWARDS FOR SOMETHING LIKE SPACE INVADERS
+public class PlayerShooting : MonoBehaviour
+{
+    public GameObject bulletPrefab;
+    public Transform firePoint;
+    public float bulletForce = 20f;
+
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(1))
+        {
+            Shoot();
+        }
+    }
+
+    void Shoot()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+        bulletRb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+    }
+}
